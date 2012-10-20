@@ -82,7 +82,7 @@
 
 				core.Assert.isType(vals, 'Array');
 				core.Assert.isTrue(vals.length > 0, 'No enum values were provided.');
-				core.Assert.isTrue(vals.length > 31, 'Too many enum names: max of 31.');
+				core.Assert.isTrue(vals.length < 31, 'Too many enum names: max of 31.');
 			}
 
 			for (i = 0, l = vals.length; i < l; i += 1) {
