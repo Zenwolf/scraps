@@ -1,5 +1,6 @@
-================================================================================
+
 Scraps of JavaScript
+================================================================================
 
 This is simply a dumping ground of random JavaScript that I have created for
 personal use.
