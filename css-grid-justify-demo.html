@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+
+<title>css grid justify demo</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta charset="utf-8">
+
+<style type="text/css">
+html {
+	font-size: 62.5%; /* set base font size to 10px equiv */
+	height: 100%;
+}
+
+body {
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	background: #eee;
+}
+
+p {
+	font-size: 2.4rem;
+}
+
+ul, li {
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
+}
+
+.grid {
+	text-align: justify;
+	font-size: 0.1px;
+	border-top: 1rem solid #ccc;
+	background: #eee;
+	margin-bottom: 4rem;
+}
+
+.box, .ph {
+	display: inline-block;
+	width: 23%;
+	padding-top: 23%;
+	margin-bottom: 2.5%;
+}
+
+.box {
+	Xborder: 0.5rem solid green;
+	background: #444;
+}
+
+.ph {
+	padding: 0;
+}
+
+.grid:after {
+	content: '';
+	display: inline-block;
+	width: 100%;
+	border-top: 1rem dashed #efe;
+}
+</style>
+
+</head>
+<body>
+
+<ul class="grid">
+	<li class="box"></li>
+	<li class="box"></li>
+	<li class="box"></li>
+	<li class="box"></li>
+	<li class="box"></li>
+	<li class="box"></li>
+	<li class="ph"></li>
+	<li class="ph"></li>
+</ul>
+
+<p>This is a demo of using justify to evenly distribute a grid without any
+JavaScript computation.</p>
+
+</body>
+</html>
