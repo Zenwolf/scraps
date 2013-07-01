@@ -18,6 +18,7 @@ body {
 	margin: 0;
 	padding: 0;
 	background: #eee;
+	-webkit-font-smoothing: antialiased;
 }
 
 p {
@@ -48,6 +49,20 @@ ul, li {
 .box {
 	Xborder: 0.5rem solid green;
 	background: #444;
+	position: relative;
+	opacity: 0.5;
+	
+	transform: translateZ(0);
+	-webkit-transform: translateZ(0);
+	-moz-transform: translateZ(0);
+
+	transition: opacity 0.4s ease-in-out;
+	-webkit-transition: opacity 0.4s ease-in-out;
+	-moz-transition: opacity 0.4s ease-in-out;
+}
+
+.box:hover {
+	opacity: 1;
 }
 
 .ph {
@@ -60,24 +75,70 @@ ul, li {
 	width: 100%;
 	border-top: 1rem dashed #efe;
 }
+
+.msg {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin-top: -12%;
+	margin-left: -0.5rem;
+	text-align: center;
+	color: #eee;
+	font-size: 3.6rem;
+}
+
+/* 3 COL */
+@media (max-width: 80rem){
+	.grid .box {
+		width: 31%;
+		padding-top: 31%;
+		margin-bottom: 3%;
+	}
+}
+
+/* 2 COL */
+@media (max-width: 60rem){
+	.grid .box {
+		width: 48%;
+		padding-top: 48%;
+		margin-bottom: 4%;
+	}
+}
+
+/* SINGLE COL */
+@media (max-width: 40rem){
+	.grid .box {
+		width: 100%;
+		padding-top: 100%;
+		margin-bottom: 5%;
+	}
+}
+
 </style>
+
 
 </head>
 <body>
 
 <ul class="grid">
-	<li class="box"></li>
-	<li class="box"></li>
-	<li class="box"></li>
-	<li class="box"></li>
-	<li class="box"></li>
-	<li class="box"></li>
+	<li class="box"><div class="msg">1</div></li>
+	<li class="box"><div class="msg">2</div></li>
+	<li class="box"><div class="msg">3</div></li>
+	<li class="box"><div class="msg">4</div></li>
+	<li class="box"><div class="msg">5</div></li>
+	<li class="box"><div class="msg">6</div></li>
 	<li class="ph"></li>
 	<li class="ph"></li>
 </ul>
 
 <p>This is a demo of using justify to evenly distribute a grid without any
 JavaScript computation.</p>
+
+<script src="../src/fn.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+console.log("test");
+</script>
 
 </body>
 </html>
