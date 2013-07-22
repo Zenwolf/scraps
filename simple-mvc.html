@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+
+<title>The simplest MVC</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta charset="utf-8">
+
+<style type="text/css">
+html {
+	font-size: 62.5%; /* set base font size to 10px equiv */
+	height: 100%;
+}
+
+body {
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	background: #eee;
+	-webkit-font-smoothing: antialiased;
+}
+
+p {
+	font-size: 2.4rem;
+}
+
+ul, li {
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
+}
+
+.grid {
+	text-align: justify;
+	font-size: 0.1px;
+	border-top: 1rem solid #ccc;
+	background: #eee;
+	margin-bottom: 4rem;
+
+	user-select: none;
+	-webkit-user-select: none;
+}
+
+.box, .ph {
+	display: inline-block;
+	width: 23%;
+	padding-top: 23%;
+	margin-bottom: 2.5%;
+}
+
+.box {
+	background: #444;
+	position: relative;
+	opacity: 0.5;
+
+	transform: translateZ(0);
+	-webkit-transform: translateZ(0);
+	-moz-transform: translateZ(0);
+}
+
+.box:hover {
+	opacity: 1;
+	cursor: pointer;
+}
+
+.box:active {
+	background: cornsilk;
+}
+
+.box:active .msg {
+	color: #444;
+}
+
+.ph {
+	padding: 0;
+}
+
+.grid:after {
+	content: '';
+	display: inline-block;
+	width: 100%;
+	border-top: 1rem dashed #efe;
+}
+
+.msg {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin-top: -12%;
+	margin-left: -0.5rem;
+	text-align: center;
+	color: #eee;
+	font-size: 3.6rem;
+}
+
+.tf {
+	transition: all 0.3s ease-in-out;
+	-webkit-transition: all 0.3s ease-in-out;
+	-moz-transition: all 0.3s ease-in-out;
+}
+
+/* 3 COL */
+@media (max-width: 80rem){
+	.grid .box {
+		width: 31%;
+		padding-top: 31%;
+		margin-bottom: 3%;
+	}
+}
+
+/* 2 COL */
+@media (max-width: 60rem){
+	.grid .box {
+		width: 48%;
+		padding-top: 48%;
+		margin-bottom: 4%;
+	}
+}
+
+/* SINGLE COL */
+@media (max-width: 40rem){
+	.grid .box {
+		width: 100%;
+		padding-top: 100%;
+		margin-bottom: 5%;
+	}
+}
+
+</style>
+
+
+</head>
+<body>
+
+<ul class="grid">
+	<li class="box tf"><div class="msg tf">1</div></li>
+	<li class="box tf"><div class="msg tf">2</div></li>
+	<li class="box tf"><div class="msg tf">3</div></li>
+	<li class="box tf"><div class="msg tf">4</div></li>
+	<li class="box tf"><div class="msg tf">5</div></li>
+	<li class="box tf"><div class="msg tf">6</div></li>
+	<li class="ph"></li>
+	<li class="ph"></li>
+</ul>
+
+<p>This is an example of simple MVC.</p>
+
+<script type="text/javascript">
+
+function Observable() {
+	this.listeners = {};
+}
+
+Observable.prototype.addListener = function (eventName, listener, context, isOnce) {
+	var listeners = this.listeners;
+	var entry = null;
+
+	context = context || null;
+	if (typeof isOnce !== 'boolean') isOnce = false;
+	listeners[eventName] = listeners[eventName] || [];
+	entry = [listener, context, isOnce];
+	listeners[eventName].push(entry);
+};
+
+Observable.prototype.removeListener = function (eventName, listener, context, isOnce) {
+	var listeners = this.listeners[eventName];
+	var entry = null;
+	var i = 0;
+	var l = 0;
+	var removed = null;
+
+	context = context || null;
+
+	if (!listeners) return;
+
+	if (typeof isOnce !== 'boolean') {
+		isOnce = false;
+	}
+
+	l = listeners.length;
+
+	for (; i < l; i += 1) {
+		entry = listeners[i];
+
+		if (entry[0] === listener
+			&& entry[1] === context
+			&& entry[2] === isOnce) {
+
+			removed = listeners.splice(i, 1)[0];
+			break;
+		}
+	}
+
+	return removed;
+};
+
+Observable.prototype.clearListeners = function () {
+	this.listeners = {};
+};
+
+Observable.prototype.once = function (eventName, listener, context) {
+	this.addListener(eventName, listener, context, true);
+};
+
+Observable.prototype.emit = function (eventName, arg1, arg2, arg3, arg4, arg5) {
+	var listeners = this.listeners[eventName];
+	var entry = null;
+	var fn = null;
+	var context = null;
+	var isOnce = false;
+	var i = 0;
+	var l = 0;
+
+	if (!listeners) return;
+
+	// make a copy to protect against timing issues.
+	listeners = listeners.slice(0);
+
+	l = listeners.length;
+
+	for (; i < l; i += 1){
+		entry = listeners[i];
+		fn = entry[0];
+		content = entry[1];
+		isOnce = entry[2];
+
+		if (isOnce === true) {
+			// modify the original, not the copy
+			this.listeners[eventName].splice(i, 1);
+		}
+
+		if (context) {
+			fn.call(context, arg1, arg2, arg3, arg4, arg5);
+		}
+		else {
+			// Direct execution is faster when there is no context
+			fn(arg1, arg2, arg3, arg4, arg5);
+		}
+	}
+}
+
+function Model(props) {
+	Observable.call(this);
+	this.props = {};
+
+	for (var prop in props) {
+		this.props[prop] = props[prop];
+	}
+}
+
+Model.prototype = new Observable();
+Model.prototype.constructor = Model;
+
+Model.prototype.get = function (name) {
+	return this.props[name];
+};
+
+Model.prototype.set = function (name, val) {
+	var oldVal = this.props[name];
+	if ( oldVal === val || typeof val === 'undefined' ) {
+		return; // undefined, i.e. no value
+	}
+	this.props[name] = val;
+	this.emit('change', { oldVal: oldVal, newVal: val });
+	return oldVal;
+};
+
+function Controller(model) {
+	this.model = model;
+}
+
+//Controller.prototype.
+
+</script>
+
+</body>
+</html>
